@@ -9,6 +9,6 @@ namespace BLL.DAL
         [Required, StringLength(5)] // Admin, User
         public string Name { get; set; }
 
-        public List<Role> Roles { get; set; } = new List<Role>();
+        public List<User> Users { get; set; } = new List<User>();
     }
 }

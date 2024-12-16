@@ -5,11 +5,13 @@ using BLL.Services;
 using BLL.Models;
 using BLL.Services.Bases;
 using BLL.DAL;
+using Microsoft.AspNetCore.Authorization;
 
 // Generated from Custom Template.
 
 namespace MVC.Controllers
 {
+    [Authorize]
     public class PetsController : MvcController
     {
         // Service injections:
@@ -35,6 +37,7 @@ namespace MVC.Controllers
         }
 
         // GET: Pets
+        [AllowAnonymous]
         public IActionResult Index()
         {
             // Get collection service logic:
@@ -60,6 +63,7 @@ namespace MVC.Controllers
         }
 
         // GET: Pets/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             SetViewData();
@@ -69,6 +73,7 @@ namespace MVC.Controllers
         // POST: Pets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create(PetModel pet)
         {
             if (ModelState.IsValid)
@@ -87,6 +92,7 @@ namespace MVC.Controllers
         }
 
         // GET: Pets/Edit/5
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(int id)
         {
             // Get item to edit service logic:
@@ -98,6 +104,7 @@ namespace MVC.Controllers
         // POST: Pets/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(PetModel pet)
         {
             if (ModelState.IsValid)
@@ -116,8 +123,14 @@ namespace MVC.Controllers
         }
 
         // GET: Pets/Delete/5
+        // Way 2:
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
+            // Way 1:
+            //if (!User.IsInRole("Admin"))
+            //    return RedirectToAction("Login", "Users");
+
             // Get item to delete service logic:
             var item = _petService.Query().SingleOrDefault(q => q.Record.Id == id);
             return View(item);
@@ -126,6 +139,7 @@ namespace MVC.Controllers
         // POST: Pets/Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteConfirmed(int id)
         {
             // Delete item service logic:

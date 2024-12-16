@@ -1,12 +1,15 @@
 ﻿using BLL.Controllers.Bases;
 using BLL.Models;
 using BLL.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // Generated from Custom Template.
 
 namespace MVC.Controllers
 {
+    // Way 2:
+    [Authorize(Roles = "Admin")]
     public class SpeciesController : MvcController
     {
         // Service injections:
@@ -29,6 +32,8 @@ namespace MVC.Controllers
         }
 
         // GET: Species
+        // Way 1:
+        //[Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             // Get collection service logic:

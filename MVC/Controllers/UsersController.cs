@@ -24,23 +24,23 @@ namespace MVC.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Login(UserModel user)
+        public async Task<IActionResult> Login(UserModel user)
         {
             if (ModelState.IsValid)
             {
-                var userModel = _userService.Query().SingleOrDefault(u => u.UserName == user.Record.UserName &&
-                    u.Password == user.Record.Password && u.Record.IsActive);
+                var userModel = _userService.Query().SingleOrDefault(u => u.Record.UserName == user.Record.UserName &&
+                    u.Record.Password == user.Record.Password && u.Record.IsActive);
                 if (userModel is not null)
                 {
                     List<Claim> claims = new List<Claim>()
                     {
                         new Claim(ClaimTypes.Name, userModel.UserName),
-                        new Claim(ClaimTypes.Role, userModel.Role)
+                        new Claim(ClaimTypes.Role, userModel.Role),
+                        new Claim("Id", userModel.Record.Id.ToString())
                     };
                     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var principal = new ClaimsPrincipal(identity);
-                    // TODO: async methods
-                    HttpContext.SignInAsync(principal, new AuthenticationProperties()
+                    await HttpContext.SignInAsync(principal, new AuthenticationProperties()
                     {
                         IsPersistent = true
                     });
@@ -48,6 +48,12 @@ namespace MVC.Controllers
                 }
             }
             return View();
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
         }
     }
 }
