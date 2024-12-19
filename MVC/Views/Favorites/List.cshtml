@@ -1,0 +1,59 @@
+﻿@model IEnumerable<FavoritesModel>
+
+@* Generated from Custom Template. *@
+@* Model namespace using directive should be added to _ViewImports.cshtml. *@
+
+@{
+    var containerDivClass = "container-fluid";
+}
+@{
+    ViewData["Title"] = "Favorites";
+}
+
+<div class="@containerDivClass">
+    <h1>@ViewData["Title"]</h1>
+    <hr />
+</div>
+
+@if (Model is not null)
+{
+    <form asp-action="List" autocomplete="off">
+        <div class="@containerDivClass">
+            <div class="row">
+                <div class="col-12 text-danger">
+                    @TempData["Message"]
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-10 text-success">
+                    @Model.Count() record(s) found.
+                </div>
+                <div class="col-2 text-end">
+                    
+                </div>
+            </div>
+            <table class="table table-striped table-hover">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PetName)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+		            @foreach (var item in Model) {
+				        <tr>
+					        <td>
+						        @Html.DisplayFor(modelItem => item.PetName)
+					        </td>
+					        <td class="text-end w-25">
+						        <a asp-action="Remove" asp-route-petId="@item.PetId">Remove from Favorites</a>&nbsp;|&nbsp;
+						    </td>
+				        </tr>
+		            }
+                </tbody>
+            </table>
+        </div>
+    </form>
+}

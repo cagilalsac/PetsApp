@@ -26,6 +26,9 @@ builder.Services.AddScoped<IService<Pet, PetModel>, PetService>();
 builder.Services.AddScoped<IService<Owner, OwnerModel>, OwnerService>();
 builder.Services.AddScoped<IService<User, UserModel>, UserService>();
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<HttpServiceBase, HttpService>();
+
 // Authentication:
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 	.AddCookie(options =>
@@ -35,6 +38,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 		options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
 		options.SlidingExpiration = true;
 	});
+
+// Session:
+builder.Services.AddSession(options =>
+{
+	options.IdleTimeout = TimeSpan.FromMinutes(30); // default: 20 minutes
+});
 
 var app = builder.Build();
 
@@ -55,6 +64,9 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+// Session:
+app.UseSession();
 
 app.MapControllerRoute(
 	name: "default",

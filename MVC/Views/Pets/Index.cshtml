@@ -71,6 +71,8 @@
 					        <td class="text-end w-25">
                                 @if (User.Identity.IsAuthenticated)
                                 {
+                                    <a asp-action="Add" asp-controller="Favorites" asp-route-petId="@item.Record.Id">Add to Favorites</a>
+                                    @:&nbsp;|&nbsp;
 						            <a asp-action="Details" asp-route-id="@item.Record.Id">Details</a>@:&nbsp;|&nbsp;
                                     if (User.IsInRole("Admin"))
                                     {
